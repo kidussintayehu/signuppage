@@ -1,8 +1,7 @@
-from sqlite3.dbapi2 import Date
 from flask import Flask,render_template,request
 import sqlite3
 import hashlib
-from string import printable,ascii_letters,digits
+import re
 
 app=Flask(__name__)
 
@@ -27,7 +26,7 @@ def registor_page():
 @app.route("/login page")
 def login_page():
     return render_template("login.html")
-@app.route("/registor",methods=['POST'])
+@app.route("/registor",methods=['[POST]','[GET]'])
 def registor():
     name=request.form["name"]
     password=request.form["password"]
@@ -35,10 +34,7 @@ def registor():
     hashed_password=hashlib.sha256(str(password).encode('utf-8')).hexdigest()
     conn=sqlite3.connect("store.db")
     db=conn.cursor()
-    print(name)
-    print(hashed_password)
-    print(day)
-    print(day=="")
+    
     nameTuple=(name, )
     passwordTuple=(hashed_password, )
     name_query="SELECT * FROM airlines WHERE name=?"
@@ -49,24 +45,20 @@ def registor():
     record=db.fetchall()
     
     for row in record:
-        # print(row[0])
-        # print(row[1])
-        # print(row[2])
-        # print(row[3])
-        # print(row[1]==name)
-        # print(row[2]==password)
         if row[1]==name and row[2]==hashed_password:
             return "u already have acount"
     if name=="" or day=="":
         return "u missed to type name or day "
-    print(set(name).difference(ascii_letters+digits))
-    if set(name).difference(ascii_letters+digits):
-        return "u used special charactor"
-    insert_query="INSERT INTO airlines(name,password,day) VALUES(?,?,?)"
-    db.execute(insert_query,(name,hashed_password,day))
-    conn.commit()
-    db.close()
-    return render_template("registered.html")
+    regexNameForAlphabets=re.findall("[a-zA-Z]",name)
+    regexNameForDigits=re.findall("\d",name)
+    if regexNameForAlphabets and regexNameForDigits:
+        insert_query="INSERT INTO airlines(name,password,day) VALUES(?,?,?)"
+        db.execute(insert_query,(name,hashed_password,day))
+        conn.commit()
+        db.close()
+        return render_template("registered.html")
+    return "you have to use alphabets and numbers only"
+   
 
 @app.route("/login",methods=["POST"])
 def login():
@@ -74,8 +66,7 @@ def login():
     name=request.form["name"]
     password=request.form["password"]
     password=hashlib.sha256(str(password).encode('utf-8')).hexdigest()
-    print(name)
-    print(password)
+    
     con=sqlite3.connect("store.db")
     con=con.cursor()
     query="SELECT * FROM airlines WHERE name=%s"
@@ -86,12 +77,6 @@ def login():
     record=con.fetchall()
     
     for row in record:
-        # print(row[0])
-        # print(row[1])
-        # print(row[2])
-        # print(row[3])
-        print(row[1]==name)
-        print(row[2]==password)
         if row[1]==name and row[2]==password:
             return render_template("reminder.html",name=row[1])
         
