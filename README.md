@@ -4,4 +4,4 @@ for the project to perform as intended I use libraries like
 - sqlite3 as a database
 - from flask render_template and request
 - hashlib for the password to be unknown for the anyone
-- string library allows user to enter only alphabets and numbers
+- regex library allows user to enter only alphabets and numbers
