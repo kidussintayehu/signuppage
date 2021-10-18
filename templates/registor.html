@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+
+</style>
+
+<body>
+
+    <h1>registor and book ur flight</h1>
+    <form action="/registor" method="POST">
+        <p>USERNAME : <input name="name" type="text" placeholder="username,donot use special charactor" autocomplete="off" autofocus=""></p>
+        <p>PASSWORD : <input name="password" type="password" placeholder="password atleast 8 charactor" autocomplete="off" min="8" required></p>
+        <!-- <p>TIME OF FLIGHT : <input timeofflight="time" type="date" placeholder="time">
+            <select name="days">       
+        <option disabled selected value>days</option>
+        {% for day in day %}
+        <option value="{{day}}">{{ day }}</option>
+        {% endfor %} -->
+        <!-- this is the place for the days -->
+        <label for="start">Start date:</label>
+
+        <input type="date" id="start" name="day" value="2018-07-22">
+        </p>
+        </select>
+        <input type="submit" value="registor">
+    </form>
+
+</body>
+
+</html>
