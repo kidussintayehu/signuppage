@@ -26,7 +26,7 @@ def registor_page():
 @app.route("/login page")
 def login_page():
     return render_template("login.html")
-@app.route("/registor",methods=['[POST]','[GET]'])
+@app.route("/registor",methods=['POST'])
 def registor():
     name=request.form["name"]
     password=request.form["password"]
@@ -49,15 +49,19 @@ def registor():
             return "u already have acount"
     if name=="" or day=="":
         return "u missed to type name or day "
-    regexNameForAlphabets=re.findall("[a-zA-Z]",name)
-    regexNameForDigits=re.findall("\d",name)
-    if regexNameForAlphabets and regexNameForDigits:
-        insert_query="INSERT INTO airlines(name,password,day) VALUES(?,?,?)"
-        db.execute(insert_query,(name,hashed_password,day))
-        conn.commit()
-        db.close()
-        return render_template("registered.html")
-    return "you have to use alphabets and numbers only"
+    regexNameForAlphabets=re.match("^[a-zA-Z][a-zA-Z0-9]{1,50}$",name)
+    regexDayForDate=re.match("^2021-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[0])$",day)
+    print(not regexNameForAlphabets)
+    if regexNameForAlphabets == None:
+        return "you have to use alphabets and numbers only"
+    if regexDayForDate==None:
+        return "enter valid day formate"
+    insert_query="INSERT INTO airlines(name,password,day) VALUES(?,?,?)"
+    db.execute(insert_query,(name,hashed_password,day))
+    conn.commit()
+    db.close()
+    return render_template("registered.html")
+    
    
 
 @app.route("/login",methods=["POST"])
