@@ -51,7 +51,7 @@ def registor():
         return "u missed to type name or day "
     regexNameForAlphabets=re.match("^[a-zA-Z][a-zA-Z0-9]{1,50}$",name)
     regexDayForDate=re.match("^2021-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[0])$",day)
-    print(not regexNameForAlphabets)
+    
     if regexNameForAlphabets == None:
         return "you have to use alphabets and numbers only"
     if regexDayForDate==None:
